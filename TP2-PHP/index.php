@@ -9,8 +9,8 @@
 <body>
     <h1>Titre PHP</h1>
     <?php 
-        $date = date('d-m-y h:i:s');
-        echo "La date est:" + $date ;
+        $date = date('l d m Y g:i:s');
+        echo $date;
     ?>
 </body>
 </html>
