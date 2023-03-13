@@ -155,7 +155,7 @@ h6, .h6 {
 
 p {
   margin-top: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 1 rem;
 }
 
 abbr[title],
@@ -11328,14 +11328,20 @@ html {
   margin-left: 1rem;
 }
 .divider-custom .divider-custom-icon {
-  color: #2c3e50;
-  font-size: 2rem;
+    color: #fff;
+    font-size: 2rem;
+  }
+
+.divider-custom-line-white {
+    background-color: #fff !important;
 }
-.divider-custom.divider-light .divider-custom-line {
-  background-color: #fff;
+
+.divider-custom-icon-white {
+    color: #fff !important;
 }
+
 .divider-custom.divider-light .divider-custom-icon {
-  color: #fff;
+  color: #2c3e50;
 }
 
 .btn-xl {
