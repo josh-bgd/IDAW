@@ -1,0 +1,18 @@
+h1 {
+    color:blue;
+    font-family: "Times New Roman";
+    font-weight: bold;
+}
+
+p{
+    font-family: "Times New Roman";
+
+}
+
+ul{
+    list-style-type: circle;
+}
+
+ul.a:hover{
+    color: hotpink;
+}
