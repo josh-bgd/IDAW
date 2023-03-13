@@ -14,6 +14,6 @@ ul{
     list-style-type: circle;
 }
 
-ul.a:hover{
+a:hover{
     color: hotpink;
 }
