@@ -9,7 +9,7 @@
 <body>
     <h1>Titre PHP</h1>
     <?php 
-        $date = date('l d m Y g:i:s');
+        $date = date('l d m Y h:i:s');
         echo $date;
     ?>
 </body>
