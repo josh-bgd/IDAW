@@ -5,7 +5,7 @@ function renderMenuToHTML($currentPageId) {
     // idPage titre
         'index' => array( 'Accueil' ),
         'cv' => array( 'Cv' ),
-        'projets' => array('Mes Projets')
+        'projets' => array('Hobbies')
         );
     // ...
     echo '<nav><ul>';
