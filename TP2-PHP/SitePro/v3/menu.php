@@ -1,43 +1,23 @@
 <?php
 function renderMenuToHTML($currentPageId) {
-   
     // un tableau qui d\'efinit la structure du site
-   /* $mymenu = array(
-        // idPage titre
+    $mymenu = array(
+    // idPage titre
         'index' => array( 'Accueil' ),
-        'cv' => array( 'CV' ),
-        'projets' => array('Hobbies')
-    );*/
-
+        'cv' => array( 'Cv' ),
+        'projets' => array('Mes Projets')
+        );
     // ...
-    if ($currentPageId=="index") {
-    echo 
-    '<nav class="menu">
-            <ul>
-                <button><li><a id="selected" href="index.php">Accueil</a></li></button>
-                <button><li><a href="cv.php">CV</a></li></button>
-                <button><li><a href="projets.php">Hobbies</a></li></button>
-            </ul>
-    </nav>';
-    } else if ($currentPageId=="cv" ) {
-        echo 
-    '<nav class="menu">
-            <ul>
-                <button><li><a href="index.php">Accueil</a></li></button>
-                <button><li><a id="selected" href="cv.php">CV</a></li></button>
-                <button><li><a href="projets.php">Hobbies</a></li></button>
-            </ul>
-    </nav>';
-    } else {
-        echo 
-        '<nav class="menu">
-                <ul>
-                    <button><li><a href="index.php">Accueil</a></li></button>
-                    <button><li><a href="cv.php">CV</a></li></button>
-                    <button><li><a id="selected" href="projets.php">Hobbies</a></li></button>
-                </ul>
-        </nav>'; 
+    echo '<nav><ul>';
+    foreach ($mymenu as $pageId => $pageParameters) {
+        /* On parcourt le tableau $mymenu et la clé de l'élément courant est copiée dans $pageId 
+        tandis que sa valeur est copiée dans $pageparameters*/
+        if ($pageId == $currentPageId) {
+            echo '<li class="active"><a href="' . $pageId . '.php">' . $pageParameters . '</a></li>';
+        } else {
+            echo '<li><a href="' . $pageId . '.php">' . $pageParameters . '</a></li>';
+        }
     }
-    // ...
+    echo '</ul></nav>';
 }
 ?>
