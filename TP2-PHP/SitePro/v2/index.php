@@ -14,6 +14,7 @@
     <header>
     <?php
         require_once('template_menu.php');
+        renderMenuToHTML('index');
     ?>
     </header>
     <h1>Page d'accueil</h1>
@@ -38,5 +39,9 @@
     <br>
     <br>
     <p>cette page correspond à la page d'accueil du site pro de Josua</p>
+    <?php
+        require_once('template_footer.php');
+        renderFooterToHTML('index');
+    ?>
 </body>
 </html>

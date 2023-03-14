@@ -14,6 +14,7 @@
     <header>
     <?php
         require_once('template_menu.php');
+        renderMenuToHTML('projets');
     ?>
     </header>
     <h1>Projets</h1>
@@ -28,5 +29,9 @@
             <li>projet 5 : Lorem ipsum dolor sit amet consectetur adipisicing elit.</li>
         </ul>
     </div>
+    <?php
+        require_once('template_footer.php');
+        renderFooterToHTML('projets');
+    ?>
 </body>
 </html>

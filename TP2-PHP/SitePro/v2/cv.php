@@ -14,8 +14,13 @@
     <header>
     <?php
         require_once('template_menu.php');
+        renderMenuToHTML('cv');
     ?>
     </header>
     <p>cette page contient le cv de Josua</p>
+    <?php
+        require_once('template_footer.php');
+        renderFooterToHTML('cv');
+    ?>
 </body>
 </html>
