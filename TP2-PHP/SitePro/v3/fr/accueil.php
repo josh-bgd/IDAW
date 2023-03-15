@@ -3,12 +3,12 @@
     <h5>Changer la langue</h5>
     <ul>
         <li><button><a href="index.php?page=accueil&lang=en">Anglais</a></button></li>
-        <li><button><a href="index.php?page=accueil&lang=en">Français</a></button></li>
+        <li><button><a href="index.php?page=accueil&lang=fr">Français</a></button></li>
     </ul>
 </div>
 <div>
     <p>Une petite photo de Josua</p>
-    <img src="../../../../TP1/SitePro/v1/assets/img/portfolio/cake.png">
+    <img src="../../../../TP1/SitePro/v1/assets/img/avataaars.svg">
 </div>
 <div class="container-fluid">
     <div class="container">

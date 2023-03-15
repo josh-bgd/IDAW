@@ -2,13 +2,13 @@
 <div>
     <h5>Change language</h5>
     <ul>
-        <li><button><a href="index.php?page=accueil&lang=fr">English</a></button></li>
+        <li><button><a href="index.php?page=accueil&lang=en">English</a></button></li>
         <li><button><a href="index.php?page=accueil&lang=fr">French</a></button></li>
     </ul>
 </div>
 <div>
     <p>A lil pic' of Josua</p>
-    <img src="../../../../TP1/SitePro/v1/assets/img/portfolio/cake.png">
+    <img src="../../../../TP1/SitePro/v1/assets/img/avataaars.svg">
 </div>
 <div class="container-fluid">
     <div class="container">
