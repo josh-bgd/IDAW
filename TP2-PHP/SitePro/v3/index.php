@@ -9,7 +9,6 @@
     require_once("header.php");
 ?> 
 <header class="bandeau_haut">
-<h1 class="titre">Hector Durand</h1>
 </header>
 <?php
     require_once("menu.php");
