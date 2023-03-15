@@ -1,7 +1,14 @@
 <h1>Page d'accueil</h1>
 <div>
+    <h5>Changer la langue</h5>
+    <ul>
+        <li><button><a href="index.php?page=accueil&lang=en">Anglais</a></button></li>
+        <li><button><a href="index.php?page=accueil&lang=en">Français</a></button></li>
+    </ul>
+</div>
+<div>
     <p>Une petite photo de Josua</p>
-    <img src="/../images/photo_Josua_IDAW.jpg">
+    <img src="../../../../TP1/SitePro/v1/assets/img/portfolio/cake.png">
 </div>
 <div class="container-fluid">
     <div class="container">

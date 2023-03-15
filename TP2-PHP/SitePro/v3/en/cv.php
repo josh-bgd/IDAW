@@ -1,1 +1,1 @@
- <p>cette page contient le cv de Josua</p>
+ <p>This page is for Josua's resume</p>
