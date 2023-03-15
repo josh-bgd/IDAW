@@ -13,9 +13,9 @@ function renderMenuToHTML($currentPageId) {
         /* On parcourt le tableau $mymenu et la clé de l'élément courant est copiée dans $pageId 
         tandis que sa valeur est copiée dans $pageparameters*/
         if ($pageId == $currentPageId) {
-            echo '<li class="active"><a href="' . $pageId . '.php">' . $pageParameters . '</a></li>';
+            echo '<button><li class="active"><a href="' . $pageId . '.php">' . $pageParameters[0] . '</a></li></button>';
         } else {
-            echo '<li><a href="' . $pageId . '.php">' . $pageParameters . '</a></li>';
+            echo '<button><li><a href="' . 'index.php?page=' . $pageId . '.php">' . $pageParameters[0] . '</a></li></button>';
         }
     }
     echo '</ul></nav>';

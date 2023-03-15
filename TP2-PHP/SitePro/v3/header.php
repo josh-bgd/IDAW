@@ -8,8 +8,6 @@
     <link href="../../../assets/bootstrap/css/bootstrap.min.css">
     <link href="../../../assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="../../../assets/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <title>
-        <?php
-    </title>
+    <title><?php echo $currentPageId ?></title>
 </head>
 <body>

@@ -1,14 +1,14 @@
 <?php
 require_once("header.php");
-require_once("menu.php");
 $currentPageId = 'accueil';
 if(isset($_GET['page'])) {
-   $currentPageId = $_GET['page'];
-} ?>
+   $currentPageId = $_GET['page']; // récupère la valeur de la variable 'page' dans l'URL, sinon définit la valeur par défaut 'accueil'
+} ?> 
 <header class="bandeau_haut">
 <h1 class="titre">Hector Durand</h1>
 </header>
 <?php
+require_once("menu.php");
 renderMenuToHTML($currentPageId);
 ?>
 <section class="corps">
