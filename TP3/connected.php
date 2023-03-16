@@ -10,8 +10,13 @@
 
 <body>
     <?php
-    $login = isset($_GET['login']) ? $_GET['login'] : '?';
-    $password = isset($_GET['password']) ? $_GET['password'] : '?';
+    $login = "Personne";
+    $password = "NULL";
+
+    if(isset($_GET['login']) && isset($_GET['password'])) {
+        $login=$_GET['login'];
+        $password=$_GET['password'];
+    }
 
     echo "<p>Bonjour " . $login . ", votre mot de passe est :  " . $password . "</p>" 
     ?>
