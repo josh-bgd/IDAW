@@ -19,18 +19,7 @@ p {
 
 ul {
     list-style-type: none;
-    text-align: center;
-}
-
-button {
-    margin-top: 1% !important;
-    margin-bottom: 3% !important;
-    margin-left: 8% !important;
-    margin-right: 8% !important;
-}
-
-form {
-    text-align: center;
+    text-align: center !important;
 }
 
 img {
@@ -41,6 +30,19 @@ a:hover {
     color: hotpink;
 }
 
-#login_form {
+#menu{
     text-align: center;
+}
+
+#login_form{
+    margin-left: 40%;
+    margin-right: 40%;
+}
+
+#id-login{
+    margin-right: 80px;
+}
+
+#id-index{
+    margin-right: 200px;
 }

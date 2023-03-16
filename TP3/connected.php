@@ -1,4 +1,8 @@
 <?php
+require_once('header.php');
+require_once('menu.php');
+renderMenuToHTML('connected');
+
 // on simule une base de données
 $users = array(
     // login => password
@@ -31,4 +35,6 @@ if (!$successfullyLogged) {
 } else {
     echo "<p>la methode POST est plus sécurisée que le GET car on ne voit pas le password dans l'URL :)</p>";
 }
+require_once('footer.php');
+renderFooterToHTML('connected');
 ?>
