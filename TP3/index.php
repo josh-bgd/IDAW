@@ -16,6 +16,7 @@ if (isset($_COOKIE['style_cookie'])) {
 
 <body>
     <h1>Si c'est bleu c'est style1, si cest rouge c'est style2</h1>
+    <h4>La directive 95/46/CE du Parlement européen et du Conseil vise à harmoniser la protection des libertés et droits fondamentaux des personnes physiques en ce qui concerne les activités de traitement et à assurer le libre flux des données à caractère personnel entre les États membres.</h4>
     <form id="style_form" action="index.php" method="GET">
         <select name="css">
             <option value="style1">style1</option>
