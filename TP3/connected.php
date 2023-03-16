@@ -1,25 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+// on simule une base de données
+$users = array(
+// login => password
+'riri' => 'fifi',
+'yoda' => 'maitrejedi' );
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>connected</title>
-</head>
+$login = "anonymous";
+$errorText = "";
+$successfullyLogged = false;
 
-<body>
-    <?php
-    $login = "Personne";
-    $password = "NULL";
+if(isset($_GET['login']) && isset($_GET['password'])) {
+    $tryLogin=$_GET['login'];
+    $tryPwd=$_GET['password'];
 
-    if(isset($_GET['login']) && isset($_GET['password'])) {
-        $login=$_GET['login'];
-        $password=$_GET['password'];
-    }
-
-    echo "<p>Bonjour " . $login . ", votre mot de passe est :  " . $password . "</p>" 
-    ?>
-</body>
-
-</html>
+    // si login existe et password correspond
+    if( array_key_exists($tryLogin,$users) && $users[$tryLogin]==$tryPwd ) {
+        $successfullyLogged = true;
+        $login = $tryLogin;
+    } else
+        $errorText = "Erreur de login/password";
+} else {
+    $errorText = "Merci d'utiliser le formulaire de login";
+  }
+if(!$successfullyLogged) {
+    echo $errorText;
+} else {
+    echo "<h1>Bienvenu ".$login."</h1>";
+  }
+?>
