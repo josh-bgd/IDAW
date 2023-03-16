@@ -1,31 +1,46 @@
 @charset "UTF-8";
 
-h1, h2, h3, h4, h5, h6 {
-  color:blue;
-  font-family: "Times New Roman";
-  font-weight: bold;
-  text-align: center;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: blue;
+    font-family: "Times New Roman";
+    font-weight: bold;
+    text-align: center;
 }
-p{
-  font-family: "Times New Roman";
-  text-align: center;
+
+p {
+    font-family: "Times New Roman";
+    text-align: center;
 }
-ul{
-  list-style-type: none;
-  text-align: center;
+
+ul {
+    list-style-type: none;
+    text-align: center;
 }
-button{
-  margin-top: 1% !important;
-  margin-bottom:3% !important;
-  margin-left:8% !important;
-  margin-right:8% !important;
+
+button {
+    margin-top: 1% !important;
+    margin-bottom: 3% !important;
+    margin-left: 8% !important;
+    margin-right: 8% !important;
 }
-form{
-  text-align: center;
+
+form {
+    text-align: center;
 }
+
 img {
-  margin-left: 50%;
+    margin-left: 50%;
 }
-a:hover{
-  color: hotpink;
+
+a:hover {
+    color: hotpink;
+}
+
+#login_form {
+    text-align: center;
 }

@@ -1,3 +1,10 @@
+<?php
+require_once('header.php');
+require_once('menu.php');
+renderMenuToHTML('login');
+?>
+
+<h1>Test de Style</h1>
 <form id="login_form" action="connected.php" method="POST">
     <table>
         <tr>
@@ -14,3 +21,8 @@
         </tr>
     </table>
 </form>
+
+<?php
+require_once('footer.php');
+renderFooterToHTML('login');
+?>
