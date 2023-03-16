@@ -27,5 +27,6 @@ if(!$successfullyLogged) {
     echo $errorText;
 } else {
     echo "<h1>Bienvenu ".$login."</h1>";
+    echo "la methode POST est plus sécurisée que le GET car on ne voit pas le password dans l'URL :)";
   }
 ?>
