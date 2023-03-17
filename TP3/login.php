@@ -4,6 +4,8 @@ require_once('header.php');
 require_once('menu.php');
 renderMenuToHTML('login');
 
+require_once('style.php');
+
 require_once('connected.php');
 ?>
 
