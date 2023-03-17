@@ -4,8 +4,8 @@ if(isset($_GET['page'])) {
     $currentPageId = $_GET['page']; // récupère la valeur de la variable 'page' dans l'URL, sinon définit la valeur par défaut 'accueil'
 } 
 
-if (isset($_GET['css'])) {
-    $style = $_GET['css'];
+if (isset($_POST['css'])) {
+    $style = $_POST['css'];
     setcookie('style_cookie', $style, time() + 3600); // stocke la valeur de $style dans un cookie nommé 'style_cookie' pendant 1 heure
 }
 
@@ -14,6 +14,7 @@ if (isset($_COOKIE['style_cookie'])) {
 } else {
     $style = 'style1'; // fixe un style par défaut
 }
+
 ?>
 <!DOCTYPE html>
 <html>
