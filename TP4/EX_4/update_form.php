@@ -1,8 +1,34 @@
 <?php
-renderFormToHTML ($user_id) {
 
-    $request = $pdo->prepare("SELECT * FROM users WHERE id=: $user_id");
-    $request->execute();
+$user_id = '1';
+if(isset($_GET['id'])) {
+    $user_id = $_GET['id']; // récupère la valeur de la variable 'page' dans l'URL, sinon définit la valeur par défaut 'accueil'
+} 
+
+function renderFormToHTML ($user_id) {
+
+    require_once('config.php');
+    
+    // constrction de la chaîne de connexion PDO
+    $connectionString = "mysql:host=" . _MYSQL_HOST;
+    if (defined('_MYSQL_PORT'))
+        $connectionString .= ";port=" . _MYSQL_PORT;
+    $connectionString .= ";dbname=" . _MYSQL_DBNAME;
+
+    // On définit les options PDO pour spécifier l'encodage
+    $options = array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8');
+
+    // initialiser une connexion PDO
+    $pdo = NULL;
+    try {
+        $pdo = new PDO($connectionString, _MYSQL_USER, _MYSQL_PASSWORD, $options);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    } catch (PDOException $erreur) {
+        echo 'Erreur : ' . $erreur->getMessage();
+    }
+
+    $request = $pdo->prepare("SELECT * FROM users WHERE id=:user_id");
+    $request->execute(array(':user_id' => $user_id));
 
     // On affiche les résultats dans un tableau HTML
     if ($request->rowCount() > 0) {
@@ -29,4 +55,6 @@ renderFormToHTML ($user_id) {
         echo "0 résultats";
     }
 }
+
+renderFormToHTML(($user_id));
 ?>

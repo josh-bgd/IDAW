@@ -35,37 +35,50 @@
     $request = $pdo->prepare("SELECT * FROM users");
     $request->execute();
 
+    // Récupération de la liste des tables de la base de données
+    $tables = $pdo->query('SHOW TABLES')->fetchAll(PDO::FETCH_COLUMN);
+
+    // On affiche les résultats dans un tableau HTML
+    echo "<h1>$tables[0]</h1>";
+
     // On affiche les résultats dans un tableau HTML
     if ($request->rowCount() > 0) {
         echo "<table><tr><th>ID</th><th>Nom</th><th>Email</th><th>Age</th><th>Nationalité</th><th>Actions</th></tr>";
         // On parcourt chaque ligne de résultat
         while ($row = $request->fetch(PDO::FETCH_OBJ)) {
             echo "<tr><td>" . $row->id . "</td><td>" . $row->name . "</td><td>" . $row->email . "</td><td>" . $row->age . "</td><td>" . $row->nationality . "</td><td>";
-            echo "<button><a href='update_user.php?id=" . $row->id . "'>Modifier</a></button> | ";
+            echo "<button><a href='update_form.php?id=" . $row->id . "'>Modifier</a></button> | ";
             echo "<button><a href='delete_user.php?id=" . $row->id . "'>Supprimer</a></button>";
-            echo "</td></tr>";
-
-            // formulaire de modification pour chaque utilisateur
-            
-            echo "<tr><td colspan='6'>";
-            echo "<form action='update_user.php' method='post'>";
-            echo "<input type='hidden' name='id' value='" . $row->id . "'>"; // l'id est caché on ne le voit pas sur la page web mais il est bien là
-            echo "<label for='name'>Nom :</label>";
-            echo "<input type='text' name='name' value='" . $row->name . "'><br>";
-            echo "<label for='email'>Email :</label>";
-            echo "<input type='email' name='email' value='" . $row->email . "'><br>";
-            echo "<label for='age'>Age :</label>";
-            echo "<input type='number' name='age' value='" . $row->age . "'><br>";
-            echo "<label for='nationality'>Nationalité :</label>";
-            echo "<input type='text' name='nationality' value='" . $row->nationality . "'><br>";
-            echo "<input type='submit' value='Modifier'>";
-            echo "</form>";
             echo "</td></tr>";
         }
         echo "</table>";
     } else {
         echo "0 résultats";
     }
+
+    echo '<br>';
+    echo 
+    '<form action="add_user.php" method="post">
+        <label for="name">Nom :</label>
+        <input type="text" id="name" name="name" required><br>
+        
+        <label for="email">Email :</label>
+        <input type="email" id="email" name="email" required><br>
+        
+        <label for="age">Age :</label>
+        <input type="number" id="age" name="age" required><br>
+        
+        <label for="nationality">Nationalité :</label>
+        <input type="text" id="nationality" name="nationality" required><br>
+
+        <label for="family_name">Family name :</label>
+        <input type="text" id="family_name" name="family_name" required><br>
+
+        <label for="eye_color">Eye color :</label>
+        <input type="text" id="eye_color" name="eye_color" required><br>
+        
+        <button type="submit">Ajouter</button>
+    </form>';
 
     // fermer la connexion PDO
     $pdo = null;
