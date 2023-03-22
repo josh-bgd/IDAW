@@ -76,7 +76,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo "Erreur : aucun utilisateur sélectionné";
 }
+
 ?>
 
-</body>
-</html>

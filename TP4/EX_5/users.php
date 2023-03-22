@@ -54,7 +54,6 @@
         }
     
         // Création de l'utilisateur
-
         $user = [
             'name' => $_POST['name'],
             'email' => $_POST['email'],
@@ -63,13 +62,16 @@
             'nationality' => $_POST['nationality'],
             'eye_color' => $_POST['eye_color']
         ];
-    
-        /// 
+
+        //require_once('add_user.php');
+       
+        // Récupération de l'ID auto-incrémenté de l'utilisateur créé
+        $user_id = $pdo->lastInsertId();
 
         // Renvoi de la réponse HTTP avec le code 201 Created et l'URL de la nouvelle ressource
-        header('HTTP/1.1 201 Created');
-        echo "{ \"Location\" : \"".API_URL_PREFIX."/users.php/' . $user['id']\" }";
-    
+        http_response_code(201);
+        header('Location: '._API_URL.'/users.php/' .$user_id);
+
         //Fermeture de la connexion à la base de données 
         $pdo = null;
 
@@ -86,5 +88,7 @@
         http_response_code(405); // Method Not Allowed
         exit("Méthode HTTP non autorisée.");
     }
+
+    // commande curl en POST : curl -v -d "name=John&email=john@example.com&age=30&family_name=Smith&nationality=US&eye_color=blue" http://localhost:8888/IDAW/TP4/EX_5/users.php 
 
 ?>
