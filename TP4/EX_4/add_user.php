@@ -76,6 +76,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo "Erreur : aucun utilisateur sélectionné";
 }
+
+// commande curl en POST : curl -v -d "name=John&email=john@example.com&age=30&family_name=Smith&nationality=US&eye_color=blue" http://localhost:8888/IDAW/TP4/EX_5/users.php 
 ?>
 
 </body>
