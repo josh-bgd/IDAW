@@ -33,11 +33,10 @@
             </tr>
         </thead>
         <tbody id="studentsTableBody">
-
         </tbody>
     </table>
 
-    <form id="addStudentForm" action="" onsubmit="onFormsubmit();">
+    <form id="addStudentForm" action="" onsubmit="onFormsubmit(event);">
         <div class="form-group row">
             <label for="inputNom" class="col-sm-2 col-form-label">Nom*</label>
             <div class="col-sm-3">
@@ -76,82 +75,71 @@
         </div>
     </form>
 
+
     <script>
+        let selectedRow = null;
+        const students = [];
 
-        //La fonction submit permet de gérer l'envoi du formulaire en empêchant l'envoi par défaut au serveur. 
-        //Elle appelle ensuite la fonction addStudent, qui ajoute ou modifie l'étudiant dans le tableau en fonction de si une 
-        //ligne est sélectionnée ou non.
+        $(document).ready(() => {
+            $('#addStudentForm').on('submit', (event) => {
+                event.preventDefault();
+                const nom = $('#inputNom').val().trim();
+                if (nom === '') return;
 
-        let students = [];
+                const prenom = $('#inputPrenom').val();
+                const dateNaissance = $('#inputDateNaissance').val();
+                const aimeLeCours = $('#inputAimeLeCours').prop('checked');
+                const remarques = $('#inputRemarques').val();
 
-        $("#addStudentForm").on("submit", function (event) {
-            event.preventDefault();
-            const nom = $("#inputNom").val().trim();
-            if (nom === "") {
-                return;
-            }
-            const prenom = $("#inputPrenom").val();
-            const dateNaissance = $("#inputDateNaissance").val();
-            const aimeLeCours = $("#inputAimeLeCours").prop("checked");
-            const remarques = $("#inputRemarques").val();
-            const student = { nom, prenom, dateNaissance, aimeLeCours, remarques };
-            if ($("#studentsTableBody tr.selected").length) {
-                // Si une ligne est sélectionnée, on la modifie
-                const index = $("#studentsTableBody tr.selected").data("index");
-                students[index] = student;
-            } else {
-                // Sinon, on ajoute une nouvelle ligne
-                students.push(student);
-            }
-            updateTable();
-            // On réinitialise le formulaire
-            $("#addStudentForm")[0].reset();
-            $("#inputNom").focus();
+                if (selectedRow) {
+                    const index = selectedRow.data('index');
+                    students[index] = { nom, prenom, dateNaissance, aimeLeCours, remarques };
+                    updateTable();
+                    selectedRow = null;
+                } else {
+                    students.push({ nom, prenom, dateNaissance, aimeLeCours, remarques });
+                    updateTable();
+                }
+
+                $('#addStudentForm').trigger('reset');
+                $('#inputNom').focus();
+            });
+
+            $('#studentsTableBody').on('click', '.btn-warning', function () {
+                selectedRow = $(this).closest('tr');
+                const index = selectedRow.data('index');
+                const student = students[index];
+                $('#inputNom').val(student.nom);
+                $('#inputPrenom').val(student.prenom);
+                $('#inputDateNaissance').val(student.dateNaissance);
+                $('#inputAimeLeCours').prop('checked', student.aimeLeCours);
+                $('#inputRemarques').val(student.remarques);
+            });
+
+            $('#studentsTableBody').on('click', '.btn-danger', function () {
+                const row = $(this).closest('tr');
+                const index = row.data('index');
+                students.splice(index, 1);
+                updateTable();
+            });
         });
 
-            //La fonction updateTable permet de mettre à jour le tableau avec les informations des étudiants stockées dans le tableau students. 
-            //Elle vide d'abord le corps du tableau, puis parcourt chaque étudiant du tableau students et crée une nouvelle ligne pour chaque 
-            //étudiant. Elle ajoute ensuite la ligne au corps du tableau.
-            
         function updateTable() {
-            const $tableBody = $("#studentsTableBody");
-            $tableBody.empty();
-            students.forEach(function (student, index) {
-                const $tr = $("<tr>").appendTo($tableBody);
-                $tr.data("index", index);
-                $("<td>").text(student.nom).appendTo($tr);
-                $("<td>").text(student.prenom).appendTo($tr);
-                $("<td>").text(student.dateNaissance).appendTo($tr);
-                $("<td>").text(student.aimeLeCours ? "Oui" : "Non").appendTo($tr);
-                $("<td>").text(student.remarques).appendTo($tr);
-                const $td = $("<td>").appendTo($tr);
-                $("<button>").addClass("btn btn-info btn-sm").text("Edit").on("click", function () {
-                    const index = $(this).closest("tr").data("index");
-                    editStudent(index);
-                }).appendTo($td);
-                $("<button>").addClass("btn btn-danger btn-sm").text("Delete").on("click", function () {
-                    const index = $(this).closest("tr").data("index");
-                    deleteStudent(index);
-                }).appendTo($td);
+            const tableBody = $('#studentsTableBody');
+            tableBody.empty();
+            students.forEach((student, i) => {
+                const aimeLeCoursLabel = student.aimeLeCours ? 'Oui' : 'Non';
+                const row = $('<tr>').attr('data-index', i);
+                $('<td>').text(student.nom).appendTo(row);
+                $('<td>').text(student.prenom).appendTo(row);
+                $('<td>').text(student.dateNaissance).appendTo(row);
+                $('<td>').text(aimeLeCoursLabel).appendTo(row);
+                $('<td>').text(student.remarques).appendTo(row);
+                $('<td>').appendTo(row)
+                    .append($('<button>').addClass('btn btn-warning').text('Editer'))
+                    .append($('<button>').addClass('btn btn-danger').text('Supprimer'));
+                tableBody.append(row);
             });
-        }
-
-        function editStudent(index) {
-            const student = students[index];
-            $("#inputNom").val(student.nom);
-            $("#inputPrenom").val(student.prenom);
-            $("#inputDateNaissance").val(student.dateNaissance);
-            $("#inputAimeLeCours").prop("checked", student.aimeLeCours);
-            $("#inputRemarques").val(student.remarques);
-            $("#studentsTableBody tr.selected").removeClass("selected");
-            $("#studentsTableBody tr[data-index='" + index + "']").addClass("selected");
-            selectedRow = $("#studentsTableBody tr.selected");
-        }
-
-        function deleteStudent(index) {
-            students.splice(index, 1);
-            updateTable();
-            selectedRow = null;
         }
 
     </script>
