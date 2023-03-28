@@ -36,7 +36,7 @@
         </tbody>
     </table>
 
-    <form id="addStudentForm" action="" onsubmit="onFormsubmit();">
+    <form id="addStudentForm" method="POST" action="" onsubmit="onFormsubmit();">
         <div class="form-group row">
             <label for="inputNom" class="col-sm-2 col-form-label">Nom*</label>
             <div class="col-sm-3">
@@ -96,14 +96,13 @@
     header("Access-Control-Allow-Origin:*");
 
     $sql = "CREATE TABLE IF NOT EXISTS Utilisateur (
-        id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-        nom VARCHAR(30) NOT NULL,
-        prenom VARCHAR(30) NOT NULL,
-        date_naissance DATE NOT NULL,
-        aime_le_cours BOOLEAN DEFAULT 0,
-        remarques TEXT
-    )";
-
+    id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(30) NOT NULL,
+    prenom VARCHAR(30) NOT NULL,
+    date_naissance DATE NOT NULL,
+    aime_le_cours BOOLEAN DEFAULT 0,
+    remarques TEXT
+)";
 
     if ($pdo->query($sql) === FALSE) {
         $error = $pdo->errorInfo();
@@ -114,22 +113,23 @@
         $nom = $_POST['nom'];
         $prenom = $_POST['prenom'];
         $date_naissance = date('Y-m-d', strtotime($_POST['date_naissance']));
-        print($nom . $date_naissance);
         $aime_le_cours = isset($_POST['aime_le_cours']) ? 1 : 0;
         $remarques = $_POST['remarques'];
 
         $sql = "INSERT INTO Utilisateur (nom, prenom, date_naissance, aime_le_cours, remarques)
-                VALUES ('$nom', '$prenom', '$date_naissance', '$aime_le_cours', '$remarques')";
+            VALUES ('$nom', '$prenom', '$date_naissance', '$aime_le_cours', '$remarques')";
 
-        if ($pdo->query($sql) === TRUE) {
-            echo "New record created successfully";
-        } else {
+        if ($pdo->query($sql) === FALSE) {
             $error = $pdo->errorInfo();
-            echo "Error creating table: " . $error[2];
+            echo "Error inserting record: " . $error[2];
+        } else {
+            // Reset form fields and refresh the page
+            header("Refresh:0");
         }
     }
 
-    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    // Retrieve and return data
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $sql = "SELECT * FROM Utilisateur";
         $result = $pdo->query($sql);
         if ($result->rowCount() > 0) {
@@ -141,8 +141,6 @@
         } else {
             echo json_encode(array('message' => 'No user found.'));
         }
-    } else {
-        echo json_encode(array('message' => 'Invalid request method.'));
     }
 
 
@@ -175,9 +173,8 @@
             let remarques = $("#inputRemarques").val();
 
             if (nom.trim() !== '') {
-                if (selectedRow) { // Si une ligne est sélectionnée, on la modifie
+                if (selectedRow) { 
                     let index = selectedRow.attr('data-index');
-                    //students[index] = {nom, prenom, dateNaissance, aimeLeCours, remarques};
                     $.ajax({
                         url: apifolder + '/ApiREST.php',
                         type: 'PUT',
@@ -190,11 +187,11 @@
                             remarques: remarques
                         }),
                         success: function(responsejson) {
-                            // Mettre à jour la ligne modifiée avec les nouvelles informations
+                            // updating new infos
                             console.log(responsejson);
-                            updateTable(); // UPDATER UNIQUEMENT LA LIGNE ET NE PAS UTILISER CETTE FONCTION QUI RECHARGE TOUTES LA TABLE
+                            updateTable(); 
                             selectedRow = null;
-                            // Réinitialiser le formulaire
+                            // Reset form
                             $("#addStudentForm").trigger("reset");
                             $("#inputNom").focus();
                         },
@@ -202,8 +199,8 @@
                             console.log(textStatus, errorThrown);
                         }
                     });
-                    // selectedRow = null; // On désélectionne la ligne
-                } else { // Sinon, on ajoute une nouvelle ligne
+                    // selectedRow = null;
+                } else { 
                     $.ajax({
                         url: apifolder + '/ApiREST.php',
                         type: "POST",
@@ -217,7 +214,6 @@
                         contentType: "application/json",
                         success: function(data) {
                             console.log(data);
-                            // Si la requête a réussi, on ajoute l'utilisateur dans le tableau
                             students.push({
                                 nom,
                                 prenom,
@@ -234,7 +230,6 @@
 
                     });
                 }
-                // On réinitialise le formulaire
                 $("#addStudentForm").trigger("reset");
                 $("#inputNom").focus();
             }
@@ -285,7 +280,6 @@
         function onDelete(button) {
             let selectedRow = $(button).closest("tr");
             let index = selectedRow.attr('data-index');
-            //students.splice(index, 1);
             $.ajax({
                 url: apifolder + '/ApiREST.php',
                 method: "DELETE",
