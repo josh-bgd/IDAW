@@ -36,7 +36,7 @@
         </tbody>
     </table>
 
-    <form id="addStudentForm" action="" method="POST" onsubmit="onFormsubmit();">
+    <form id="addStudentForm" action="" onsubmit="onFormsubmit();">
         <div class="form-group row">
             <label for="inputNom" class="col-sm-2 col-form-label">Nom*</label>
             <div class="col-sm-3">
@@ -52,7 +52,7 @@
         <div class="form-group row">
             <label for="inputDateNaissance" class="col-sm-2 col-form-label">Date de naissance*</label>
             <div class="col-sm-3">
-            <input type="date" class="form-control" id="inputDateNaissance" name="date_naissance" required>
+                <input type="date" class="form-control" id="inputDateNaissance" name="date_naissance" required>
             </div>
         </div>
         <div class="form-group row">
@@ -99,10 +99,9 @@
         id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         nom VARCHAR(30) NOT NULL,
         prenom VARCHAR(30) NOT NULL,
-        date_naissance DATE,
-        aime_le_cours BOOLEAN,
-        remarques TEXT,
-        age INT(3) NOT NULL DEFAULT 0
+        date_naissance DATE NOT NULL,
+        aime_le_cours BOOLEAN DEFAULT 0,
+        remarques TEXT
     )";
 
 
@@ -115,6 +114,7 @@
         $nom = $_POST['nom'];
         $prenom = $_POST['prenom'];
         $date_naissance = date('Y-m-d', strtotime($_POST['date_naissance']));
+        print($nom . $date_naissance);
         $aime_le_cours = isset($_POST['aime_le_cours']) ? 1 : 0;
         $remarques = $_POST['remarques'];
 
@@ -151,7 +151,9 @@
 
 
     <script>
-        let apifolder = '';
+        let apifolder = '<?php
+                            require_once('config.php');
+                            echo _APIURL; ?>';
         let selectedRow = null;
         let students = [];
 
@@ -171,96 +173,133 @@
             let dateNaissance = $("#inputDateNaissance").val();
             let aimeLeCours = $("#inputAimeLeCours").prop('checked');
             let remarques = $("#inputRemarques").val();
-            let student = {
-                nom: nom,
-                prenom: prenom,
-                dateNaissance: dateNaissance,
-                aimeLeCours: aimeLeCours,
-                remarques: remarques
-            };
-            if (selectedRow == null) {
-                addStudent(student);
-            } else {
-                updateStudent(student);
+
+            if (nom.trim() !== '') {
+                if (selectedRow) { // Si une ligne est sélectionnée, on la modifie
+                    let index = selectedRow.attr('data-index');
+                    //students[index] = {nom, prenom, dateNaissance, aimeLeCours, remarques};
+                    $.ajax({
+                        url: apifolder + '/restapi.php',
+                        type: 'PUT',
+                        data: JSON.stringify({
+                            id: index,
+                            nom: nom,
+                            prenom: prenom,
+                            date_naissance: dateNaissance,
+                            aime_le_cours: aimeLeCours,
+                            remarques: remarques
+                        }),
+                        success: function(responsejson) {
+                            // Mettre à jour la ligne modifiée avec les nouvelles informations
+                            console.log(responsejson);
+                            updateTable(); // UPDATER UNIQUEMENT LA LIGNE ET NE PAS UTILISER CETTE FONCTION QUI RECHARGE TOUTES LA TABLE
+                            selectedRow = null;
+                            // Réinitialiser le formulaire
+                            $("#addStudentForm").trigger("reset");
+                            $("#inputNom").focus();
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            console.log(textStatus, errorThrown);
+                        }
+                    });
+                    // selectedRow = null; // On désélectionne la ligne
+                } else { // Sinon, on ajoute une nouvelle ligne
+                    $.ajax({
+                        url: apifolder + '/restapi.php',
+                        type: "POST",
+                        data: JSON.stringify({
+                            nom: nom,
+                            prenom: prenom,
+                            date_naissance: dateNaissance,
+                            aime_le_cours: aimeLeCours,
+                            remarques: remarques
+                        }),
+                        contentType: "application/json",
+                        success: function(data) {
+                            console.log(data);
+                            // Si la requête a réussi, on ajoute l'utilisateur dans le tableau
+                            students.push({
+                                nom,
+                                prenom,
+                                dateNaissance,
+                                aimeLeCours,
+                                remarques
+                            });
+                            updateTable();
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            alert("Erreur lors de l'ajout de l'utilisateur.");
+                            console.log(textStatus, errorThrown);
+                        }
+
+                    });
+                }
+                // On réinitialise le formulaire
+                $("#addStudentForm").trigger("reset");
+                $("#inputNom").focus();
             }
-            resetForm();
-        }
+        };
 
-        function addStudent(student) {
+        function updateTable() {
+            let tableBody = $("#studentsTableBody");
+            tableBody.empty();
             $.ajax({
-                type: "POST",
-                url: apifolder + "ApiREST.php",
-                data: JSON.stringify(student),
-                success: function(response) {
-                    console.log(response);
-                    readStudents();
+                url: apifolder + '/restapi.php',
+                method: "GET",
+                success: function(students) {
+                    for (let i = 0; i < students.length; i++) {
+                        let student = students[i];
+                        tableBody.append(`
+                <tr data-index="${student.id}">
+                    <td>${student.nom}</td>
+                    <td>${student.prenom}</td>
+                    <td>${student.date_naissance}</td>
+                    <td>${student.aime_le_cours ? 'Oui' : 'Non'}</td>
+                    <td>${student.remarques}</td>
+                    <td>
+                        <button type="button" class="btn btn-warning" onclick="onEdit(this)">Editer</button>
+                        <button type="button" class="btn btn-danger" onclick="onDelete(this)">Supprimer</button>
+                    </td>
+                </tr>
+                `);
+                    }
                 },
-                error: function(response) {
-                    console.log(response);
-                }
-            });
-        }
-
-        function readStudents() {
-            $.ajax({
-                type: "GET",
-                url: apifolder + "ApiREST.php",
-                success: function(response) {
-                    console.log(response);
-                    students = JSON.parse(response);
-                    displayStudents(students);
-                },
-                error: function(response) {
-                    console.log(response);
-                }
-            });
-        }
-
-        function updateStudent(student) {
-            $.ajax({
-                type: "POST",
-                url: apifolder + "ApiREST.php",
-                data: JSON.stringify(student),
-                success: function(response) {
-                    console.log(response);
-                    readStudents();
-                },
-                error: function(response) {
-                    console.log(response);
-                }
-            });
-        }
-
-        function deleteStudent(id) {
-            $.ajax({
-                type: "POST",
-                url: apifolder + "ApiREST.php",
-                data: JSON.stringify({
-                    id: id
-                }),
-                success: function(response) {
-                    console.log(response);
-                    readStudents();
-                },
-                error: function(response) {
-                    console.log(response);
+                error: function(jqXHR, textStatus, errorThrown) {
+                    alert("Erreur pour récupere les données de la table MySQL");
+                    console.log(textStatus, errorThrown);
                 }
             });
         }
 
         function onEdit(button) {
-            let student = $(button).data("student");
-            selectedRow = $(button).closest("tr")[0];
-            $("#inputNom").val(student.nom);
-            $("#inputPrenom").val(student.prenom);
-            $("#inputDateNaissance").val(student.dateNaissance);
-            $("#inputAimeLeCours").prop('checked', student.aimeLeCours);
-            $("#inputRemarques").val(student.remarques);
+            selectedRow = $(button).closest("tr");
+            let id = selectedRow.attr('data-index');
+
+            $("#inputNom").val(selectedRow.children().eq(0).text());
+            $("#inputPrenom").val(selectedRow.children().eq(1).text());
+            $("#inputDateNaissance").val(selectedRow.children().eq(2).text());
+            $("#inputAimeLeCours").prop('checked', selectedRow.children().eq(3).text() === 'Oui');
+            $("#inputRemarques").val(selectedRow.children().eq(4).text());
         }
 
         function onDelete(button) {
-            let id = $(button).data("id");
-            deleteStudent(id);
+            let selectedRow = $(button).closest("tr");
+            let index = selectedRow.attr('data-index');
+            //students.splice(index, 1);
+            $.ajax({
+                url: apifolder + '/restapi.php',
+                method: "DELETE",
+                data: JSON.stringify({
+                    id: index
+                }),
+                success: function(response) {
+                    updateTable();
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    alert("Erreur pour récupere les données de la table MySQL");
+                    console.log(textStatus, errorThrown);
+                }
+            });
         }
     </script>
 </body>
