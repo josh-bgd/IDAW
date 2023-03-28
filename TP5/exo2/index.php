@@ -179,7 +179,7 @@
                     let index = selectedRow.attr('data-index');
                     //students[index] = {nom, prenom, dateNaissance, aimeLeCours, remarques};
                     $.ajax({
-                        url: apifolder + '/restapi.php',
+                        url: apifolder + '/ApiREST.php',
                         type: 'PUT',
                         data: JSON.stringify({
                             id: index,
@@ -205,7 +205,7 @@
                     // selectedRow = null; // On désélectionne la ligne
                 } else { // Sinon, on ajoute une nouvelle ligne
                     $.ajax({
-                        url: apifolder + '/restapi.php',
+                        url: apifolder + '/ApiREST.php',
                         type: "POST",
                         data: JSON.stringify({
                             nom: nom,
@@ -244,7 +244,7 @@
             let tableBody = $("#studentsTableBody");
             tableBody.empty();
             $.ajax({
-                url: apifolder + '/restapi.php',
+                url: apifolder + '/ApiREST.php',
                 method: "GET",
                 success: function(students) {
                     for (let i = 0; i < students.length; i++) {
@@ -287,7 +287,7 @@
             let index = selectedRow.attr('data-index');
             //students.splice(index, 1);
             $.ajax({
-                url: apifolder + '/restapi.php',
+                url: apifolder + '/ApiREST.php',
                 method: "DELETE",
                 data: JSON.stringify({
                     id: index
