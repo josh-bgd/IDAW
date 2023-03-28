@@ -1,32 +1,28 @@
 <?php
 
-    require_once('config.php'); // constants: _API_URL
-    use \PHPUnit\Framework\TestCase;
-    use \PHPUnit\Framework\Assert;
+require_once('config.php'); 
+use GuzzleHttp\Client;
+use PHPUnit\Framework\TestCase;
 
-    
-    class APITests extends \PHPUnit\Framework\TestCase
+class APITests extends PHPUnit\Framework\TestCase
+{
+    public function testPOST()
     {
-        public function testPOST()
-        {
-            $client = new Client(_API_URL, array(
-                'request.options' => array(
-                    'exceptions' => false,
-                ) 
-            ));
-            $data = array(
-                'name' => 'bob',
-                'email' => 'bob@leponge.fr'
-            );
+        $client = new Client(['base_uri' => _API_URL]);
+        $data = array(
+            'name' => 'bob',
+            'email' => 'bob@leponge.fr'
+        );
 
-            $request = $client->post('/api/programmers', null, json_encode($data));
-            $response = $request->send();
+        $response = $client->request('POST', '/api/programmers', [
+            'headers' => ['Content-Type' => 'application/json'],
+            'body' => json_encode($data)
+        ]);
 
-            $this->assertEquals(201, $response->getStatusCode());
-            $this->assertTrue($response->hasHeader('Location'));
-            $data = json_decode($response->getBody(true), true);
-            $this->assertArrayHasKey('id', $data);
-        }
+        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertTrue($response->hasHeader('Location'));
+        $data = json_decode($response->getBody(true), true);
+        $this->assertArrayHasKey('id', $data);
     }
-
+}
 ?>
