@@ -22,25 +22,28 @@ function onFormsubmit() {
 
     if (nom.trim() !== '') {
         if (selectedRow) {
+        
+            let formData = {
+                "nom": nom,
+                "prenom": prenom,
+                "date_naissance": dateNaissance,
+                "aime_le_cours": aimeLeCours,
+                "remarques": remarques,
+            };
+
             $.ajax({
-                url: apifolder + '/ApiREST.php',
+                url: apifolder + '/ApiREST.php/',
                 type: 'PUT',
                 data: JSON.stringify(formData),
-                success: function (responsejson) {
-                    console.log(responsejson);
-                    // Reset form
-                    $("#addStudentForm").trigger("reset");
-                    $("#inputNom").focus();
-                    // reset selectedRow after the edit is done
-                    selectedRow = null;
-                    // Change the button back to POST method
-                    $('#submitButton').text('Ajouter');
-                    $('#submitButton').removeClass('btn-warning');
-                    $('#submitButton').addClass('btn-success');
+                contentType: 'application/json',
+                success: function (response) {
+                    console.log(response);
+
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.log(textStatus, errorThrown);
                 }
+
             });
         } else {
             $.ajax({
@@ -112,36 +115,6 @@ function onEdit(button) {
     $("#inputAimeLeCours").prop('checked', selectedRow.children().eq(3).text() === 'Oui');
     $("#inputRemarques").val(selectedRow.children().eq(4).text());
 
-    // Update database
-    let nom = $("#inputNom").val();
-    let prenom = $("#inputPrenom").val();
-    let dateNaissance = $("#inputDateNaissance").val();
-    let aimeLeCours = $("#inputAimeLeCours").prop('checked');
-    let remarques = $("#inputRemarques").val();
-
-    let formData = {
-        "id": id,
-        "nom": nom,
-        "prenom": prenom,
-        "date_naissance": dateNaissance,
-        "aime_le_cours": aimeLeCours,
-        "remarques": remarques,
-    };
-
-    $.ajax({
-        url: apifolder + '/ApiREST.php/' + id,
-        type: 'PUT',
-        data: JSON.stringify(formData),
-        contentType: 'application/json',
-        success: function (response) {
-            console.log(response);
-            
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            console.log(textStatus, errorThrown);
-        }
-        
-    });
 }
 
 
@@ -159,7 +132,7 @@ function onDelete(button) {
             updateTable();
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            alert("Erreur pour récupere les données de la table MySQL");
+            alert("Erreur pour récuperer les données de la table MySQL");
             console.log(textStatus, errorThrown);
         }
     });

@@ -1,23 +1,6 @@
 <?php
 require_once('config.php');
-
-$connectionString = "mysql:host=" . _MYSQL_HOST;
-
-if (defined('_MYSQL_PORT'))
-    $connectionString .= ";port=" . _MYSQL_PORT;
-
-$connectionString .= ";dbname=" . _MYSQL_DBNAME;
-$options = array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8');
-
-$pdo = NULL;
-try {
-    $pdo = new PDO($connectionString, _MYSQL_USER, _MYSQL_PASSWORD, $options);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $erreur) {
-    http_response_code(500);
-    echo 'Erreur : ' . $erreur->getMessage();
-    exit;
-}
+require_once('connection.php');
 
 $request_method = $_SERVER["REQUEST_METHOD"];
 
@@ -99,15 +82,17 @@ function updateUser()
     $prenom = $userData['prenom'];
     $date_naissance = $userData['date_naissance'];
     $aime_le_cours = $userData['aime_le_cours'];
+    $remarques = $userData['remarques'];
 
     global $pdo;
-    $sql = "UPDATE Utilisateur SET nom = :nom, prenom = :prenom, date_naissance = :date_naissance, aime_le_cours = :aime_le_cours WHERE id = :id";
+    $sql = "UPDATE Utilisateur SET nom = :nom, prenom = :prenom, date_naissance = :date_naissance, aime_le_cours = :aime_le_cours, remarques = :remarques WHERE id = :id";
     $stmt = $pdo->prepare($sql);
 
     $stmt->bindParam(':nom', $nom);
     $stmt->bindParam(':prenom', $prenom);
     $stmt->bindParam(':date_naissance', $date_naissance);
     $stmt->bindParam(':aime_le_cours', $aime_le_cours);
+    $stmt->bindParam(':remarques', $remarques);
     $stmt->bindParam(':id', $userData['id']);
 
 
