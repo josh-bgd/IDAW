@@ -81,29 +81,7 @@
         const students = [];
 
         $(document).ready(() => {
-            $('#addStudentForm').on('submit', (event) => {
-                event.preventDefault();
-                const nom = $('#inputNom').val().trim();
-                if (nom === '') return;
-
-                const prenom = $('#inputPrenom').val();
-                const dateNaissance = $('#inputDateNaissance').val();
-                const aimeLeCours = $('#inputAimeLeCours').prop('checked');
-                const remarques = $('#inputRemarques').val();
-
-                if (selectedRow) {
-                    const index = selectedRow.data('index');
-                    students[index] = { nom, prenom, dateNaissance, aimeLeCours, remarques };
-                    updateTable();
-                    selectedRow = null;
-                } else {
-                    students.push({ nom, prenom, dateNaissance, aimeLeCours, remarques });
-                    updateTable();
-                }
-
-                $('#addStudentForm').trigger('reset');
-                $('#inputNom').focus();
-            });
+            $('#addStudentForm').on('submit', onFormSubmit);
 
             $('#studentsTableBody').on('click', '.btn-warning', function () {
                 selectedRow = $(this).closest('tr');
@@ -123,6 +101,31 @@
                 updateTable();
             });
         });
+
+        function onFormSubmit(event) {
+            event.preventDefault();
+            const nom = $('#inputNom').val().trim();
+            if (nom === '') return;
+
+            const prenom = $('#inputPrenom').val();
+            const dateNaissance = $('#inputDateNaissance').val();
+            const aimeLeCours = $('#inputAimeLeCours').prop('checked');
+            const remarques = $('#inputRemarques').val();
+
+            if (selectedRow) {
+                const index = selectedRow.data('index');
+                students[index] = { nom, prenom, dateNaissance, aimeLeCours, remarques };
+                updateTable();
+                selectedRow = null;
+            } else {
+                students.push({ nom, prenom, dateNaissance, aimeLeCours, remarques });
+                updateTable();
+            }
+
+            $('#addStudentForm').trigger('reset');
+            $('#inputNom').focus();
+        }
+
 
         function updateTable() {
             const tableBody = $('#studentsTableBody');

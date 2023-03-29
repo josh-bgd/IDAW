@@ -14,10 +14,13 @@ try {
     $pdo = new PDO($connectionString, _MYSQL_USER, _MYSQL_PASSWORD, $options);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $erreur) {
+    http_response_code(500);
     echo 'Erreur : ' . $erreur->getMessage();
-};
+    exit;
+}
 
 $request_method = $_SERVER["REQUEST_METHOD"];
+
 
 switch ($request_method) {
     case 'GET':
@@ -33,11 +36,9 @@ switch ($request_method) {
         deleteUser();
         break;
     default:
-        header("HTTP/1.0 405 Method Not ALlowed");
+        header("HTTP/1.0 405 Method Not Allowed");
         break;
-};
-
-
+}
 
 function getAllUsers()
 {
@@ -64,12 +65,8 @@ function createUser()
     $nom = $userData['nom'];
     $prenom = $userData['prenom'];
     $date_naissance = isset($userData['date_naissance']) ? date('Y-m-d', strtotime($userData['date_naissance'])) : null;
-    $aime_le_cours = isset($userData['aime_le_cours']) ? $userData['aime_le_cours'] : 0;
+    $aime_le_cours = isset($userData['aime_le_cours']) ? intval($userData['aime_le_cours']) : 0;
     $remarques = isset($userData['remarques']) ? $userData['remarques'] : null;
-
-    print("Received name: " . $nom);
-    print("Received prename: " . $prenom);
-    print("Received date: "  . $date_naissance);
 
     if (empty($nom) || empty($prenom) || empty($date_naissance)) {
         header('HTTP/1.1 400 Bad Request');
@@ -98,48 +95,63 @@ function updateUser()
 {
     $userData = json_decode(file_get_contents('php://input'), true);
 
-    $id = $userData['id'];
     $nom = $userData['nom'];
     $prenom = $userData['prenom'];
     $date_naissance = $userData['date_naissance'];
     $aime_le_cours = $userData['aime_le_cours'];
-    $remarques = $userData['remarques'];
-    if (empty($id) || empty($nom) || empty($prenom) || empty($date_naissance) || empty($aime_le_cours)) {
-        header('HTTP/1.1 400 Bad Request');
-        echo 'Missing parameter 2';
-        return;
+
+    global $pdo;
+    $sql = "UPDATE Utilisateur SET nom = :nom, prenom = :prenom, date_naissance = :date_naissance, aime_le_cours = :aime_le_cours WHERE id = :id";
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->bindParam(':nom', $nom);
+    $stmt->bindParam(':prenom', $prenom);
+    $stmt->bindParam(':date_naissance', $date_naissance);
+    $stmt->bindParam(':aime_le_cours', $aime_le_cours);
+    $stmt->bindParam(':id', $userData['id']);
+
+
+    if ($stmt->execute()) {
+        $result = [
+            'status' => true,
+            'message' => 'User updated successfully'
+        ];
+    } else {
+        $result = [
+            'status' => false,
+            'message' => 'Error updating user'
+        ];
     }
 
-    // Connexion à la base de données
-    global $pdo;
-
-    // Modification de l'utilisateur dans la base de données
-    $stmt = $pdo->prepare('UPDATE Utilisateur SET nom = ?, prenom = ?, date_naissance = ?, aime_le_cours = ?, remarques = ? WHERE id = ?');
-    $stmt->execute([$nom, $prenom, $date_naissance, $aime_le_cours, $remarques, $id]);
-
-
-    // Envoi de la réponse HTTP
-    header('HTTP/1.1 204 No Content');
+    header('Content-Type: application/json');
+    echo json_encode($result);
 }
+
 
 
 function deleteUser()
 {
-    // Vérification des paramètres
+    global $pdo;
+
     $userData = json_decode(file_get_contents('php://input'), true);
-    $id = $userData['id'];
-    if (empty($id)) {
-        header('HTTP/1.1 400 Bad Request');
-        echo 'Missing parameter 3';
+
+    if (!isset($userData['id'])) {
+        echo json_encode(['error' => 'ID is required']);
         return;
     }
-    global $pdo;
-    // Suppression de l'utilisateur de la base de données
-    $stmt = $pdo->prepare('DELETE FROM Utilisateur WHERE id = ?');
-    $stmt->execute([$id]);
 
-    // Envoi de la réponse HTTP
-    header('HTTP/1.1 204 No Content');
+    $id = $userData['id'];
+
+    $stmt = $pdo->prepare("DELETE FROM Utilisateur WHERE id=:id");
+    $stmt->bindParam(':id', $id);
+
+    if ($stmt->execute()) {
+        echo json_encode(['success' => 'User deleted successfully']);
+    } else {
+        echo json_encode(['error' => 'User deletion failed']);
+    }
 }
+
+
 
 $pdo = null;
