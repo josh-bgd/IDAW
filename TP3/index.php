@@ -18,6 +18,7 @@ require_once('connected.php');
     <input type="submit" value="Appliquer" />
 </form>
 
+
 <?php
 require_once('logout.php');
 

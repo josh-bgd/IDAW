@@ -12,8 +12,7 @@ require_once('connection.php');
     <link href="style.css" rel="stylesheet" type="text/css" />
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
     <script>
-        let apifolder = '<?php require_once('config.php');
-                            echo _API_URL; ?>';
+        let apifolder = '<?php echo _API_URL; ?>';
     </script>
     <script src="CRUD.js" crossorigin="anonymous"></script>
     <title>tabletest</title>
